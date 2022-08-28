@@ -1,4 +1,31 @@
-export const App = () => {
+import { Component } from 'react'
+import { getEvents, renderMoreInfo } from '../service/api'
+import { Gallery } from './Gallery/Gallery'
+import { EventsInfo } from "components/EventsInfo/EventsInfo"
+
+export class App extends Component {
+  
+  state = {
+    events: [],
+    eventData: {}
+  }
+
+  componentDidMount() {
+    this.getData()
+  }
+
+  getEvent = (id) => {
+    renderMoreInfo(id).then((r) => {
+      this.setState( { eventData: r.data})
+    })
+  }
+
+  getData = () => {
+    getEvents().then((r) => {
+      this.setState({ events:  [...r]  })
+  }) }
+  
+  render() {
   return (
     <div
       style={{
@@ -10,7 +37,9 @@ export const App = () => {
         color: '#010101'
       }}
     >
-      React homework template
+      <Gallery events={this.state.events} getEvent={this.getEvent} />
+      <EventsInfo eventsData={this.state.eventData } />
     </div>
   );
-};
+  };
+  }
